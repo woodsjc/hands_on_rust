@@ -81,9 +81,9 @@ impl MapBuilder {
 
         rooms.sort_by(|a, b| a.center().x.cmp(&b.center().x));
 
-        for (i, room) in rooms.iter().enumerate().skip(1) {
+        for i in 1..rooms.len() {
             let prev = rooms[i - 1].center();
-            let new = room.center();
+            let new = rooms[i].center();
 
             if rng.range(0, 2) == 1 {
                 self.apply_horizontal_tunnel(prev.x, new.x, prev.y);

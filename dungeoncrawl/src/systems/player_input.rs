@@ -17,6 +17,7 @@ pub fn player_input(
             VirtualKeyCode::Right => Point::new(1, 0),
             VirtualKeyCode::Up => Point::new(0, -1),
             VirtualKeyCode::Down => Point::new(0, 1),
+            VirtualKeyCode::Space => Point::new(0, 0),
             _ => return, // Point::new(0, 0),
         };
 

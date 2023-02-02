@@ -60,6 +60,33 @@ impl State {
             monster_systems: build_monster_scheduler(),
         }
     }
+
+    fn game_over(&mut self, ctx: &mut BTerm) {
+        ctx.set_active_console(3);
+        ctx.print_color_centered(2, RED, BLACK, "U R DED");
+        ctx.print_color_centered(4, WHITE, BLACK, "U R DED");
+        ctx.print_color_centered(5, WHITE, BLACK, "U R DED");
+        ctx.print_color_centered(8, YELLOW, BLACK, "U R DED");
+        ctx.print_color_centered(9, GREEN, BLACK, "Press 1 to play again");
+
+        if let Some(VirtualKeyCode::Key1) = ctx.key {
+            self.ecs = World::default();
+            self.resources = Resources::default();
+            let mut rng = RandomNumberGenerator::new();
+            let mb = MapBuilder::new(&mut rng);
+
+            spawn_player(&mut self.ecs, mb.player_start);
+            mb.rooms
+                .iter()
+                .skip(1)
+                .map(|r| r.center())
+                .for_each(|p| spawn_monster(&mut self.ecs, &mut rng, p));
+
+            self.resources.insert(mb.map);
+            self.resources.insert(Camera::new(mb.player_start));
+            self.resources.insert(TurnState::AwaitingInput);
+        }
+    }
 }
 
 impl GameState for State {
@@ -84,6 +111,7 @@ impl GameState for State {
             TurnState::MonsterTurn => self
                 .monster_systems
                 .execute(&mut self.ecs, &mut self.resources),
+            TurnState::GameOver => self.game_over(ctx),
         }
 
         render_draw_buffer(ctx).expect("Render Error");

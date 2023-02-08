@@ -28,7 +28,7 @@ pub fn spawn_monster(ecs: &mut World, rng: &mut RandomNumberGenerator, point: Po
             color: ColorPair::new(WHITE, BLACK),
             glyph,
         },
-        ChasingPlayer{},
+        ChasingPlayer {},
         Health {
             current: hp,
             max: hp,
@@ -43,4 +43,17 @@ fn goblin() -> (i32, String, FontCharType) {
 
 fn orc() -> (i32, String, FontCharType) {
     (2, "Orc".to_string(), to_cp437('o'))
+}
+
+pub fn spawn_amulet_of_yatta(ecs: &mut World, p: Point) {
+    ecs.push((
+        Item,
+        AmuletOfYatta,
+        p,
+        Render {
+            color: ColorPair::new(WHITE, BLACK),
+            glyph: to_cp437('|'),
+        },
+        Name("Amulet of Yatta".to_string()),
+    ));
 }
